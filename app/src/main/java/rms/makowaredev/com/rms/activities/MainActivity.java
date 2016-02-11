@@ -1,22 +1,23 @@
-package rms.makowaredev.com.rms;
+package rms.makowaredev.com.rms.activities;
 
 import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+import com.android.volley.RequestQueue;
+
+import rms.makowaredev.com.rms.API.API;
+import rms.makowaredev.com.rms.R;
+import rms.makowaredev.com.rms.frags.NavigationDrawerFragment;
 
 
 public class MainActivity extends ActionBarActivity
@@ -31,6 +32,7 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,9 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
+
+        requestQueue = API.getInstance().getRequestQueue(this.getApplication());
+        requestQueue.add(API.getUsers());
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
