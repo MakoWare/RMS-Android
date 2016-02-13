@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -31,6 +32,46 @@ public class API {
     private API() {
     }
 
+    public RequestQueue getRequestQueue(Context ctx) {
+        if (requestQueue == null) {
+            // getApplicationContext() is key, it keeps you from leaking the
+            // Activity or BroadcastReceiver if someone passes one in.
+            requestQueue = Volley.newRequestQueue(ctx.getApplicationContext());
+        }
+        return requestQueue;
+    }
+
+    /** USERS **/
+
+
+    //Login
+    public static JsonObjectRequest login(String username, String password) {
+        final String url = BASE_URL + "/login";
+        JSONObject student1 = new JSONObject();
+        try {
+            student1.put("username", username);
+            student1.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.v(TAG, response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.v(TAG, error.getLocalizedMessage());
+                Log.v(TAG, error.getMessage());
+            }
+        });
+
+        return  jsObjRequest;
+    }
+
+    //Get Users
     public static JsonObjectRequest getUsers() {
         String url = BASE_URL + "/users";
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONObject>() {
@@ -49,12 +90,5 @@ public class API {
         return  jsObjRequest;
     }
 
-    public RequestQueue getRequestQueue(Context ctx) {
-        if (requestQueue == null) {
-            // getApplicationContext() is key, it keeps you from leaking the
-            // Activity or BroadcastReceiver if someone passes one in.
-            requestQueue = Volley.newRequestQueue(ctx.getApplicationContext());
-        }
-        return requestQueue;
-    }
+
 }
