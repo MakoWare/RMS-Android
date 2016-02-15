@@ -2,9 +2,11 @@ package rms.makowaredev.com.rms.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -22,7 +24,7 @@ import rms.makowaredev.com.rms.frags.NavigationDrawerFragment;
 import rms.makowaredev.com.rms.frags.WallListFragment;
 import rms.makowaredev.com.rms.frags.dummy.DummyContent;
 
-public class WallActivity extends Activity implements WallListFragment.OnListFragmentInteractionListener {
+public class WallActivity extends AppCompatActivity implements WallListFragment.OnListFragmentInteractionListener {
 
     private static  final String TAG = "WallActivity";
     private Drawer drawer;
@@ -34,11 +36,34 @@ public class WallActivity extends Activity implements WallListFragment.OnListFra
         Log.i(TAG, "onCreate");
 
         drawer = createDrawer(savedInstanceState);
+
+        if (findViewById(R.id.fragment_container) != null) {
+
+            // However, if we're being restored from a previous state,
+            // then we don't need to do anything and should return or else
+            // we could end up with overlapping fragments.
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            // Create a new Fragment to be placed in the activity layout
+            WallListFragment wallListFragment = new WallListFragment();
+
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            wallListFragment.setArguments(getIntent().getExtras());
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, wallListFragment).commit();
+        }
     }
 
     public void onSectionAttached(int number) {
 
     }
+
+
 
     public Drawer createDrawer(Bundle savedInstanceState) {
         AccountHeader headerResult = new AccountHeaderBuilder()
