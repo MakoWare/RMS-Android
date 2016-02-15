@@ -13,7 +13,7 @@ import rms.makowaredev.com.rms.frags.NavigationDrawerFragment;
 public class RouteActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    private final static String TAG = "GymActivity";
+    private final static String TAG = "RouteActivity";
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
 
@@ -21,30 +21,24 @@ public class RouteActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gym_activity);
+        Log.i(TAG, "onCreate()");
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
-
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         Log.i(TAG, "onNavigationDrawerItemSelected() : " + position);
         switch (position) {
+            case 0:
+                startActivity(new Intent(this, GymActivity.class));
             case 1:
-                Intent intent = new Intent(this, WallActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, WallActivity.class));
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                //Already on Routes
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+                startActivity(new Intent(this, UserActivity.class));
                 break;
         }
     }
@@ -52,15 +46,11 @@ public class RouteActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.Walls);
-                Intent intent = new Intent(this, WallActivity.class);
-                startActivity(intent);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
                 break;
         }
     }
@@ -71,4 +61,23 @@ public class RouteActivity extends ActionBarActivity
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume()");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause()");
+    }
+
 }
