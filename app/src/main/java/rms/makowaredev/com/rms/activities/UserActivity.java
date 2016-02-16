@@ -5,63 +5,97 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import rms.makowaredev.com.rms.R;
 import rms.makowaredev.com.rms.frags.NavigationDrawerFragment;
 
-public class UserActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class UserActivity extends AppCompatActivity {
 
-    private final static String TAG = "GymActivity";
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-    private CharSequence mTitle;
+    private final static String TAG = "UserActivity";
+    private Drawer drawer;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gym_activity);
+        setContentView(R.layout.user_activity);
+        Log.i(TAG, "onCreate()");
 
+        toolbar = (Toolbar) findViewById(R.id.myToolbar);
+        drawer = createDrawer(savedInstanceState);
 
+    }
+
+    public Drawer createDrawer(Bundle savedInstanceState) {
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.drawable.header)
+                .build();
+
+        return new DrawerBuilder()
+                .withActivity(this)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(true)
+                .withAccountHeader(headerResult)
+                .withSavedInstance(savedInstanceState)
+                .withDisplayBelowStatusBar(false)
+                .withToolbar(toolbar)
+                .withTranslucentStatusBar(false)
+                //.withDrawerLayout(R.layout.material_drawer_fits_not)
+                .addDrawerItems(
+                        new SecondaryDrawerItem().withName("Gym").withIdentifier(0),
+                        new SecondaryDrawerItem().withName("Walls").withIdentifier(1),
+                        new SecondaryDrawerItem().withName("Routes").withIdentifier(2),
+                        new PrimaryDrawerItem().withName("User").withIdentifier(3)
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        Intent intent = null;
+                        Log.i(TAG, "" + drawerItem.getIdentifier());
+                        if (drawerItem.getIdentifier() == 0) {
+                            intent = new Intent(UserActivity.this, GymActivity.class);
+                        } else if (drawerItem.getIdentifier() == 1) {
+                            intent = new Intent(UserActivity.this, WallActivity.class);
+                        } else if (drawerItem.getIdentifier() == 2) {
+                            intent = new Intent(UserActivity.this, RouteActivity.class);
+                        }
+
+                        if (intent != null) {
+                            UserActivity.this.startActivity(intent);
+                        }
+                        return false;
+                    }
+                }).build();
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        Log.i(TAG, "onNavigationDrawerItemSelected() : " + position);
-        switch (position) {
-            case 1:
-                Intent intent = new Intent(this, WallActivity.class);
-                startActivity(intent);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy()");
     }
 
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.Walls);
-                Intent intent = new Intent(this, WallActivity.class);
-                startActivity(intent);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume()");
     }
 
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause()");
     }
 }

@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -28,6 +29,7 @@ public class WallActivity extends AppCompatActivity implements WallListFragment.
 
     private static  final String TAG = "WallActivity";
     private Drawer drawer;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,9 @@ public class WallActivity extends AppCompatActivity implements WallListFragment.
         setContentView(R.layout.wall_activity);
         Log.i(TAG, "onCreate");
 
+        toolbar = (Toolbar) findViewById(R.id.myToolbar);
         drawer = createDrawer(savedInstanceState);
+
 
         if (findViewById(R.id.fragment_container) != null) {
 
@@ -63,8 +67,6 @@ public class WallActivity extends AppCompatActivity implements WallListFragment.
 
     }
 
-
-
     public Drawer createDrawer(Bundle savedInstanceState) {
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -73,14 +75,17 @@ public class WallActivity extends AppCompatActivity implements WallListFragment.
 
         return new DrawerBuilder()
                 .withActivity(this)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(true)
                 .withAccountHeader(headerResult)
                 .withSavedInstance(savedInstanceState)
                 .withDisplayBelowStatusBar(false)
+                .withToolbar(toolbar)
                 .withTranslucentStatusBar(false)
                 //.withDrawerLayout(R.layout.material_drawer_fits_not)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName("Gym").withIdentifier(0),
-                        new SecondaryDrawerItem().withName("Walls").withIdentifier(1),
+                        new SecondaryDrawerItem().withName("Gym").withIdentifier(0),
+                        new PrimaryDrawerItem().withName("Walls").withIdentifier(1),
                         new SecondaryDrawerItem().withName("Routes").withIdentifier(2),
                         new SecondaryDrawerItem().withName("User").withIdentifier(3)
                 )
@@ -89,12 +94,12 @@ public class WallActivity extends AppCompatActivity implements WallListFragment.
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         Intent intent = null;
                         Log.i(TAG, "" + drawerItem.getIdentifier());
-                        if (drawerItem.getIdentifier() == 1) {
-                            intent = new Intent(WallActivity.this, WallActivity.class);
+                        if (drawerItem.getIdentifier() == 0) {
+                            intent = new Intent(WallActivity.this, GymActivity.class);
                         } else if (drawerItem.getIdentifier() == 2) {
-                            intent = new Intent(WallActivity.this, WallActivity.class);
+                            intent = new Intent(WallActivity.this, RouteActivity.class);
                         } else if (drawerItem.getIdentifier() == 3) {
-                            intent = new Intent(WallActivity.this, WallActivity.class);
+                            intent = new Intent(WallActivity.this, UserActivity.class);
                         }
 
                         if (intent != null) {
