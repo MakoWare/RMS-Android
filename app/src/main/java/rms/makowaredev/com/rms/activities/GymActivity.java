@@ -1,37 +1,26 @@
 package rms.makowaredev.com.rms.activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
 import rms.makowaredev.com.rms.R;
 
 public class GymActivity extends AppCompatActivity {
     private final static String TAG = "GymActivity";
     private Drawer drawer;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +30,7 @@ public class GymActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate");
 
         // Handle Toolbar
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.myToolbar);
         //setSupportActionBar(toolbar);
 
         drawer = createDrawer(savedInstanceState);
@@ -55,9 +44,12 @@ public class GymActivity extends AppCompatActivity {
 
         return new DrawerBuilder()
                 .withActivity(this)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(true)
                 .withAccountHeader(headerResult)
                 .withSavedInstance(savedInstanceState)
                 .withDisplayBelowStatusBar(false)
+                .withToolbar(toolbar)
                 .withTranslucentStatusBar(false)
                 //.withDrawerLayout(R.layout.material_drawer_fits_not)
                 .addDrawerItems(
@@ -93,14 +85,6 @@ public class GymActivity extends AppCompatActivity {
         Log.i(TAG, "onSectionAttached");
 
     }
-
-    /*
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-    }
-    */
 
     @Override
     protected void onDestroy() {
